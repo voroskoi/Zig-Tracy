@@ -262,7 +262,7 @@ const tracy_full = struct {
         pub inline fn Text(self: ZoneCtx, text: []const u8) void {
             if (debug_verify_stack_order) {
                 if (stack_depth != self._token) {
-                    std.debug.panic("Error: expected Value() at stack depth {} but was {}\n", .{ self._token, stack_depth });
+                    std.debug.panic("Error: expected Text() at stack depth {} but was {}\n", .{ self._token, stack_depth });
                 }
             }
             c.___tracy_emit_zone_text(self._zone, text.ptr, text.len);
@@ -270,7 +270,7 @@ const tracy_full = struct {
         pub inline fn Name(self: ZoneCtx, name: []const u8) void {
             if (debug_verify_stack_order) {
                 if (stack_depth != self._token) {
-                    std.debug.panic("Error: expected Value() at stack depth {} but was {}\n", .{ self._token, stack_depth });
+                    std.debug.panic("Error: expected Name() at stack depth {} but was {}\n", .{ self._token, stack_depth });
                 }
             }
             c.___tracy_emit_zone_name(self._zone, name.ptr, name.len);
