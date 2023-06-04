@@ -23,9 +23,11 @@ pub fn build(b: *Builder) void {
 
     const lib = b.addStaticLibrary(.{
         .name = "tracy",
+        .root_source_file = .{ .path = "nothing.zig" }, // Give the linker something to link when tracy is disabled
         .target = target,
         .optimize = optimize,
     });
+    b.installArtifact(lib);
     if (enable) {
         lib.addIncludePath("tracy");
         lib.addCSourceFile("tracy/TracyClient.cpp", &[_][]const u8{
