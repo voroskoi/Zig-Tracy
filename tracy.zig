@@ -245,10 +245,7 @@ const tracy_stub = struct {
 };
 
 const tracy_full = struct {
-    const c = @cImport({
-        @cDefine("TRACY_ENABLE", "");
-        @cInclude("tracy/TracyC.h");
-    });
+    const c = @import("./tracy_c.zig");
 
     const has_callstack_support = @hasDecl(c, "TRACY_HAS_CALLSTACK") and @hasDecl(c, "TRACY_CALLSTACK");
     const callstack_enabled: c_int = if (has_callstack_support) c.TRACY_CALLSTACK else 0;
