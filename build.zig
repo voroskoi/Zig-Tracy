@@ -1,6 +1,6 @@
 const std = @import("std");
-const Builder = std.build.Builder;
-const LibExeObjStep = std.build.LibExeObjStep;
+const Builder = std.Build.Builder;
+const LibExeObjStep = std.Build.LibExeObjStep;
 
 /// Build required sources, use tracy by importing "tracy.zig"
 pub fn build(b: *Builder) void {
@@ -29,13 +29,16 @@ pub fn build(b: *Builder) void {
     });
     b.installArtifact(lib);
     if (enable) {
-        lib.addIncludePath("tracy");
-        lib.addCSourceFile("tracy/TracyClient.cpp", &[_][]const u8{
-            "-DTRACY_ENABLE",
+        lib.addIncludePath(.{ .path = "tracy" });
+        lib.addCSourceFile(.{
+            .file = .{ .path = "tracy/TracyClient.cpp" },
             // MinGW doesn't have all the newfangled windows features,
             // so we need to pretend to have an older windows version.
-            "-D_WIN32_WINNT=0x601",
-            "-fno-sanitize=undefined",
+            .flags = &.{
+                "-DTRACY_ENABLE",
+                "-D_WIN32_WINNT=0x601",
+                "-fno-sanitize=undefined",
+            },
         });
 
         lib.linkLibC();
