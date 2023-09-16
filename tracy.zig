@@ -2,31 +2,9 @@ const std = @import("std");
 const builtin = @import("builtin");
 const Src = std.builtin.SourceLocation;
 
-// check for a decl named tracy_enabled in root or build_options
 pub const enabled = blk: {
-    var build_enable: ?bool = null;
-    var root_enable: ?bool = null;
-
     const root = @import("root");
-    if (@hasDecl(root, "tracy_enabled")) {
-        root_enable = @as(bool, root.tracy_enabled);
-    }
-    if (!builtin.is_test) {
-        // Don't try to include build_options in tests.
-        // Otherwise `zig test` doesn't work.
-        const options = @import("build_options");
-        if (@hasDecl(options, "tracy_enabled")) {
-            build_enable = @as(bool, options.tracy_enabled);
-        }
-    }
-
-    if (build_enable != null and root_enable != null) {
-        if (build_enable.? != root_enable.?) {
-            @compileError("root.tracy_enabled disagrees with build_options.tracy_enabled! Please remove one or make them match.");
-        }
-    }
-
-    break :blk root_enable orelse (build_enable orelse false);
+    break :blk if (@hasDecl(root, "tracy_enabled")) true else false;
 };
 
 const debug_verify_stack_order = false;
